@@ -1,0 +1,9 @@
+general: {
+    ws = true
+    ws_port = 8188
+    ws_interface = "0.0.0.0"
+
+    wss = false
+
+    admin_ws = false
+}

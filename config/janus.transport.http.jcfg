@@ -1,0 +1,9 @@
+general: {
+    http = true
+    port = 8891
+    ip = "0.0.0.0"
+
+    https = false
+    admin_http = false
+    cors = true
+}

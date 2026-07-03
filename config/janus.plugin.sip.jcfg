@@ -1,0 +1,6 @@
+general: {
+    keepalive_interval = 120
+    behind_nat = false
+
+    user_agent = "Janus-3CX-WebRTC"
+}
