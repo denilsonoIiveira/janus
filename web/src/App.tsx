@@ -21,14 +21,15 @@ type IncomingCall = {
 // O adapter normaliza a API WebRTC entre os diferentes navegadores
 const adapter = (webrtcAdapter as any).default ?? webrtcAdapter;
 
-const JANUS_SERVER = import.meta.env.VITE_JANUS_SERVER || "ws://localhost:8188";
+const JANUS_SERVER =  "wss://api-janus.vertticegr.com.br";
+const TOKEN_API_URL = import.meta.env.VITE_TOKEN_API_URL || "/api/janus/token";
 
 const SIP_EXTENSION = import.meta.env.VITE_SIP_EXTENSION || "7003";
 const SIP_DOMAIN = import.meta.env.VITE_SIP_DOMAIN || "vertticegr01.my3cx.com.br";
 const SIP_PROXY = import.meta.env.VITE_SIP_PROXY || `sip:${SIP_DOMAIN}:5060`;
 
-const SIP_AUTH_USER = import.meta.env.VITE_SIP_AUTH_USER || "";
-const SIP_PASSWORD = import.meta.env.VITE_SIP_PASSWORD || "";
+const SIP_AUTH_USER = import.meta.env.VITE_SIP_AUTH_USER || "qD4YcUYpm2";
+const SIP_PASSWORD = import.meta.env.VITE_SIP_PASSWORD || "cW4eAuH6Ck";
 
 const AUTO_ANSWER_DELAY_MS = 5000;
 
@@ -80,6 +81,36 @@ export default function App() {
     }
 
     setStatus("connecting");
+    addLog("Solicitando token ao backend...");
+
+    // let token: string;
+    // try {
+    //   const response = await fetch(TOKEN_API_URL, {
+    //     method: "POST",
+    //     cache: "no-store",
+    //     signal: AbortSignal.timeout(5000),
+    //   });
+    //   if (!response.ok) {
+    //     throw new Error(`Backend respondeu com HTTP ${response.status}`);
+    //   }
+
+    //   const result: unknown = await response.json();
+    //   if (
+    //     typeof result !== "object" ||
+    //     result === null ||
+    //     !("token" in result) ||
+    //     typeof result.token !== "string" ||
+    //     !result.token
+    //   ) {
+    //     throw new Error("Backend retornou um token inválido");
+    //   }
+    //   token = result.token;
+    // } catch (error) {
+    //   addLog("Erro ao solicitar token ao backend", error instanceof Error ? error.message : error);
+    //   setStatus("error");
+    //   return;
+    // }
+
     addLog("Inicializando Janus...");
 
     Janus.init({
@@ -91,6 +122,7 @@ export default function App() {
 
         const janus = new Janus({
           server: JANUS_SERVER,
+          
           success: () => {
             addLog("Conectado no Janus");
             janusRef.current = janus;
@@ -329,18 +361,6 @@ export default function App() {
     setRegistered(false);
     setIncomingCall(null);
     incomingJsepRef.current = null;
-    setStatus("idle");
-  }
-
-  function destroyJanus() {
-    addLog("Destruindo sessão Janus");
-    try { sipHandleRef.current?.hangup(); } catch {}
-    try { janusRef.current?.destroy(); } catch {}
-    janusRef.current = null;
-    sipHandleRef.current = null;
-    incomingJsepRef.current = null;
-    setIncomingCall(null);
-    setRegistered(false);
     setStatus("idle");
   }
 

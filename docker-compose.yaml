@@ -12,3 +12,14 @@ services:
       - ./config/janus.plugin.sip.jcfg:/usr/local/etc/janus/janus.plugin.sip.jcfg:ro
 
     command: ["janus", "-F", "/usr/local/etc/janus"]
+
+  token-api:
+    build: ./backend
+    container_name: janus-token-api
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      PORT: "3000"
+      JANUS_ADMIN_URL: "http://127.0.0.1:7088/admin"
+    depends_on:
+      - janus

@@ -9,6 +9,7 @@ general: {
     debug_level = 4
     debug_timestamps = true
     daemonize = false
+    token_auth = true
 }
 
 media: {

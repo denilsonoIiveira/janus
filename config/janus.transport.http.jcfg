@@ -4,6 +4,12 @@ general: {
     ip = "0.0.0.0"
 
     https = false
-    admin_http = false
     cors = true
+}
+
+admin: {
+    admin_http = true
+    admin_port = 7088
+    admin_ip = "127.0.0.1"
+    admin_https = false
 }
